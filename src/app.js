@@ -1,6 +1,12 @@
-//node.js
-const {v4: uuidv4}  = require('uuid');
+const express = require('express');
+const app = express();
+const PORT = 3000;
 
-//const express = require('express');
+// Create Endpoint
+app.get('/', (req, res) => {
+    res.send('hello world');
+});
 
-console.log(uuidv4());
+app.listen(PORT, () => {
+    console.log('App listening on port ' + PORT);
+});
