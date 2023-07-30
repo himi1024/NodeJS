@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const People = require('./models/people');
+
 const app = express();
 
 
@@ -25,7 +27,7 @@ const json = {
 };
 
 // JSON List of People
-const people = [
+const peopleL = [
     {
         "name": "Ada",
         "age": "20"
@@ -40,13 +42,18 @@ const people = [
     }
 ];
 
+const people = new People({
+    name: 'Himi',
+    age: '24'
+});
+
 // Create Endpoint
 app.get('/', (req, res) => {
-    res.end("Hello World!");
+    res.send(people);
 })
 
 app.get('/api/people', (req, res) => {
-    res.send({"people": people});
+    res.send({"people": peopleL});
 });
 
 app.post('/', (req, res) => {
