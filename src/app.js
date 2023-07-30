@@ -2,13 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
+
 mongoose.set('strictQuery', false);
 
 // Adding middleware to enable parse that data pass in the body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true} ));
 
-const PORT = 3000;
+//importing the .env config file
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
+const CONNECTION = process.env.CONNECTION;
 
 // Creating a json object in JS 
 const json = {
@@ -57,7 +62,7 @@ app.post('/api/people', (req, res) => {
 // Connect with mongoDB Atlas
 const start = async() => {
     try{
-        await mongoose.connect('mongodb+srv://admin:admin@himicloud.izynvgj.mongodb.net/?retryWrites=true&w=majority');
+        await mongoose.connect(CONNECTION);
 
         app.listen(PORT, () => {
             console.log('App listening on port ' + PORT);
