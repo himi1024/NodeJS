@@ -1,5 +1,10 @@
 const express = require('express');
 const app = express();
+
+// Adding middleware to enable parse that data pass in the body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true} ));
+
 const PORT = 3000;
 
 // Creating a json object in JS 
@@ -38,6 +43,12 @@ app.get('/api/people', (req, res) => {
 
 app.post('/', (req, res) => {
     res.send('POST request');
+})
+
+
+app.post('/api/people', (req, res) => {
+    console.log(req.body);
+    res.send(req.body);
 })
 
 app.listen(PORT, () => {
