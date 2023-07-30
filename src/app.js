@@ -1,5 +1,8 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
+
+mongoose.set('strictQuery', false);
 
 // Adding middleware to enable parse that data pass in the body
 app.use(express.json());
@@ -51,6 +54,17 @@ app.post('/api/people', (req, res) => {
     res.send(req.body);
 })
 
-app.listen(PORT, () => {
-    console.log('App listening on port ' + PORT);
-});
+// Connect with mongoDB Atlas
+const start = async() => {
+    try{
+        await mongoose.connect('mongodb+srv://admin:admin@himicloud.izynvgj.mongodb.net/?retryWrites=true&w=majority');
+
+        app.listen(PORT, () => {
+            console.log('App listening on port ' + PORT);
+        });
+    } catch(e){
+        console.log(e.message);
+    }
+};
+
+start();
