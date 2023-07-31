@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const People = require('./models/people');
+const Member = require('./models/people');
 
 const app = express();
 
@@ -17,43 +17,27 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const CONNECTION = process.env.CONNECTION;
 
-// Creating a json object in JS 
-const json = {
-    name: "Himi Chan",
-    Color: "Blue",
-    Numbers: [
-        10, 24
-    ]
-};
-
-// JSON List of People
-const peopleL = [
-    {
-        "name": "Ada",
-        "age": "20"
-    },
-    {
-        "name": "Leon",
-        "age": "22"
-    },
-    {
-        "name": "Ashley",
-        "age": "20"
-    }
-];
-
-const people = new People({
-    name: 'Himi',
-    age: '24'
+const member = new Member({
+    name: 'Yoruka',
+    age: '22'
 });
+
+// Save the data in the MongoDB
+//member.save();
 
 // Create Endpoint
 app.get('/', (req, res) => {
-    res.send(people);
+    res.send("welcome!");
 })
 
-app.get('/api/people', (req, res) => {
-    res.send({"people": peopleL});
+// Using the DB data
+app.get('/api/member', async (req, res) => {
+    try{
+        const result = await Member.find();
+        res.json({"members": result});
+    }catch(e){
+        
+    }
 });
 
 app.post('/', (req, res) => {
@@ -61,10 +45,18 @@ app.post('/', (req, res) => {
 })
 
 
-app.post('/api/people', (req, res) => {
+app.post('/api/member', async(req, res) => {
     console.log(req.body);
-    res.send(req.body);
+    // Store the post req to database.
+    const member = new Member(req.body);
+    try{
+        await member.save();
+        res.status(201).json({member});
+    }catch(e){
+        res.status(400).json({ error: e.message});
+    }
 })
+
 
 // Connect with mongoDB Atlas
 const start = async() => {
