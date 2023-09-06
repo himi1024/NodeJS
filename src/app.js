@@ -17,11 +17,6 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const CONNECTION = process.env.CONNECTION;
 
-const member = new Member({
-    name: 'Yoruka',
-    age: '22'
-});
-
 // Save the data in the MongoDB
 //member.save();
 
@@ -40,6 +35,26 @@ app.get('/api/member', async (req, res) => {
     }
 });
 
+app.get('/api/member/:id', async (req, res) => {
+    console.log({
+        requestParams: req.params,
+        requestQuery: req.query
+    });
+    try{
+        const {id: memberId} = req.params;
+        console.log(memberId);
+        const member = await Member.findById(memberId);
+        console.log(member);
+        if(!member){
+            res.status(404).json({error: 'User not found'});
+        }
+        else
+            res.json({member});
+    } catch(e){
+        res.status(500).json({error: 'something is wrong'});
+    }
+})
+
 app.post('/', (req, res) => {
     res.send('POST request');
 })
@@ -49,6 +64,7 @@ app.post('/api/member', async(req, res) => {
     console.log(req.body);
     // Store the post req to database.
     const member = new Member(req.body);
+    const result = await Member.find();
     try{
         await member.save();
         res.status(201).json({member});
