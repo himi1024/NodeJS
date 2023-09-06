@@ -55,12 +55,22 @@ app.get('/api/member/:id', async (req, res) => {
     }
 })
 
-app.put('/api/member/:id', async(req,res) => {
+app.put('/api/member/:id', async(req, res) => {
+    try{
+        const memberId = req.params.id;
+        // replace the existing member with the request body
+        const result = await Member.replaceOne({_id: memberId}, req.body);
+        console.log(result);
+        res.json({updatedCount: result.modifiedCount});
+    } catch (e){
+        res.status(500).json({error: 'something is wrong'});
+    }
+})
+
+app.delete('/api/member/:id', async(req, res) => {
     const memberId = req.params.id;
-    // replace the existing member with the request body
-    const result = await Member.replaceOne({_id: memberId}, req.body);
-    console.log(result);
-    res.json({updatedCount: result.modifiedCount});
+    const result = await Member.deleteOne({_id: memberId});
+    res.json({deletedCount: result.deletedCount});
 })
 app.post('/', (req, res) => {
     res.send('POST request');
