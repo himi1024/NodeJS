@@ -55,6 +55,13 @@ app.get('/api/member/:id', async (req, res) => {
     }
 })
 
+app.put('/api/member/:id', async(req,res) => {
+    const memberId = req.params.id;
+    // replace the existing member with the request body
+    const result = await Member.replaceOne({_id: memberId}, req.body);
+    console.log(result);
+    res.json({updatedCount: result.modifiedCount});
+})
 app.post('/', (req, res) => {
     res.send('POST request');
 })
